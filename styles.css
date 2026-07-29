@@ -1235,11 +1235,12 @@ button {
 
   .header-actions {
     width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 12px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     margin-top: 14px;
+    flex-wrap: wrap;
   }
 
   .search-box {
@@ -1256,14 +1257,14 @@ button {
   }
 
   .btn-brown {
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 170px;
     padding: 12px 16px;
     font-size: 0.95rem;
   }
 
   .cart-trigger {
     padding: 10px;
-    align-self: flex-start;
   }
   
   .store-info-overlay {
