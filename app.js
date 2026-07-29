@@ -142,6 +142,14 @@ function setupEventListeners() {
     navMenu.classList.toggle('active');
   });
 
+  // Search Filter
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', event => {
+      filterProducts(event.target.value.trim().toLowerCase());
+    });
+  }
+
   // Close mobile menu when a nav item is clicked
   const navLinks = document.querySelectorAll('.nav-menu a');
   navLinks.forEach(link => {
