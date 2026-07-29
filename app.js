@@ -142,6 +142,21 @@ function setupEventListeners() {
     navMenu.classList.toggle('active');
   });
 
+  // Close mobile menu when a nav item is clicked
+  const navLinks = document.querySelectorAll('.nav-menu a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navMenu.classList.remove('active');
+    });
+  });
+
+  // Reset mobile nav on window resize to avoid stale open state
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      navMenu.classList.remove('active');
+    }
+  });
+
   // Smooth Active Nav Link Update on Scroll
   window.addEventListener('scroll', highlightActiveNav);
 }

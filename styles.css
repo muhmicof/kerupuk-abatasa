@@ -177,6 +177,12 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  flex-wrap: wrap;
+}
+
+.header nav {
+  position: relative;
+  width: 100%;
 }
 
 .logo {
@@ -1158,6 +1164,11 @@ button {
 }
 
 @media (max-width: 768px) {
+  .header .container {
+    align-items: center;
+    padding: 0 12px;
+  }
+
   .nav-menu {
     display: none;
     position: absolute;
@@ -1166,16 +1177,43 @@ button {
     width: 100%;
     background-color: var(--bg-white);
     flex-direction: column;
-    padding: 20px;
+    padding: 18px 20px;
     box-shadow: var(--shadow-md);
+    z-index: 1100;
   }
   
   .nav-menu.active {
     display: flex;
   }
   
+  .nav-menu li {
+    width: 100%;
+  }
+  
+  .nav-link {
+    padding: 12px 0;
+    width: 100%;
+  }
+  
   .mobile-toggle {
     display: block;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .btn-brown {
+    padding: 10px 16px;
+    font-size: 0.92rem;
+  }
+
+  .cart-trigger {
+    padding: 10px;
   }
   
   .search-box input {
@@ -1200,6 +1238,29 @@ button {
 }
 
 @media (max-width: 576px) {
+  .header .container {
+    justify-content: space-between;
+    padding: 0 10px;
+  }
+
+  .header-actions {
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .nav-menu {
+    padding: 18px 16px;
+  }
+
+  .btn-brown {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cart-drawer {
+    max-width: 100%;
+  }
+
   .products-grid {
     grid-template-columns: 1fr;
   }
