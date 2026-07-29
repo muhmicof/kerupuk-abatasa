@@ -142,14 +142,6 @@ function setupEventListeners() {
     navMenu.classList.toggle('active');
   });
 
-  // Search Filter
-  const searchInput = document.getElementById('searchInput');
-  if (searchInput) {
-    searchInput.addEventListener('input', event => {
-      filterProducts(event.target.value.trim().toLowerCase());
-    });
-  }
-
   // Close mobile menu when a nav item is clicked
   const navLinks = document.querySelectorAll('.nav-menu a');
   navLinks.forEach(link => {
@@ -264,19 +256,6 @@ function updateCartUI() {
 
   cartItems.innerHTML = html;
   cartTotal.innerHTML = `<span class="currency">Rp</span><span class="price-val">${grandTotal.toLocaleString('id-ID')}</span>`;
-}
-
-// Live Search Products
-function filterProducts(query) {
-  const cards = document.querySelectorAll('.product-card');
-  cards.forEach(card => {
-    const text = card.textContent.toLowerCase();
-    if (text.includes(query)) {
-      card.style.display = 'flex';
-    } else {
-      card.style.display = 'none';
-    }
-  });
 }
 
 // Store Location Marker Selection
