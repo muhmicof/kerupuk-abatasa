@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Kerupuk Abatasa</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+  <!-- LOGIN OVERLAY -->
+  <div class="admin-login-overlay" id="loginOverlay">
+    <div class="admin-login-card">
+      <div class="admin-login-header">
+        <a href="index.html" class="logo">Kerupuk <span>Abatasa</span></a>
+        <span class="admin-badge">ADMIN</span>
+      </div>
+      <h2>Login Admin</h2>
+      <p class="login-subtitle">Masukkan kata sandi untuk mengakses dashboard manajemen produk.</p>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="loginPassword">Kata Sandi (Password) *</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="loginPassword" required placeholder="Masukkan password admin..." autocomplete="current-password">
+            <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('loginPassword', 'eyeIconLogin')" aria-label="Lihat Password">
+              <svg id="eyeIconLogin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+          <div class="login-error-msg" id="loginErrorMsg"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Masuk ke Dashboard</button>
+
+        <div style="text-align: center; margin-top: 16px;">
+          <a href="index.html" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: underline;">&larr; Kembali ke Website Utama</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-layout" id="adminLayout" style="display: none;">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <a href="index.html" class="logo">Kerupuk <span>Abatasa</span></a>
+        <span class="admin-badge">ADMIN</span>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="#" class="admin-nav-item active">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          Kelola Produk
+        </a>
+        <a href="index.html" class="admin-nav-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          Lihat Website Utama
+        </a>
+        <button type="button" class="admin-nav-item btn-nav-action" onclick="openChangePasswordModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Ubah Password
+        </button>
+        <button type="button" class="admin-nav-item btn-nav-action btn-logout" onclick="logoutAdmin()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          Keluar (Logout)
+        </button>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <button class="btn btn-secondary btn-sm" onclick="resetDefaultProducts()">Reset ke Produk Default</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+      <!-- HEADER -->
+      <header class="admin-header">
+        <div class="admin-header-title">
+          <h1>Manajemen Produk</h1>
+          <p>Kelola daftar produk kerupuk, harga, deskripsi, dan gambar yang tampil di website.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openProductModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Tambah Produk Baru
+        </button>
+      </header>
+
+      <!-- STATS -->
+      <div class="admin-stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-brown">📦</div>
+          <div>
+            <h3 id="statTotalProducts">0</h3>
+            <p>Total Produk Aktif</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-orange">⭐</div>
+          <div>
+            <h3 id="statFeaturedProducts">0</h3>
+            <p>Produk Paling Laris</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-green">✅</div>
+          <div>
+            <h3>Terhubung</h3>
+            <p>Status LocalStorage</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLE SECTION -->
+      <section class="admin-card">
+        <div class="admin-card-header">
+          <h2>Daftar Produk</h2>
+          <span class="text-muted">Total: <strong id="productCountBadge">0</strong> Produk</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Gambar</th>
+                <th>Nama Produk</th>
+                <th>Deskripsi</th>
+                <th>Harga (Rp)</th>
+                <th>Badge / Tag</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="adminProductTable">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- PRODUCT MODAL (ADD / EDIT) -->
+  <div class="admin-modal-overlay" id="productModalOverlay">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h3 id="modalTitle">Tambah Produk Baru</h3>
+        <button class="close-modal" onclick="closeProductModal()">&times;</button>
+      </div>
+
+      <form id="productForm" onsubmit="saveProduct(event)">
+        <input type="hidden" id="productId">
+
+        <div class="form-group">
+          <label for="productName">Nama Produk *</label>
+          <input type="text" id="productName" required placeholder="Contoh: Kerupuk Ikan Tenggiri">
+        </div>
+
+        <div class="form-group">
+          <label for="productPrice">Harga (Rp) *</label>
+          <input type="number" id="productPrice" required placeholder="Contoh: 25000" min="500">
+        </div>
+
+        <div class="form-group">
+          <label for="productBadge">Badge / Tag (Opsional)</label>
+          <input type="text" id="productBadge" placeholder="Contoh: Paling Laris, Promo, Baru">
+        </div>
+
+        <div class="form-group">
+          <label for="productDesc">Deskripsi Produk *</label>
+          <textarea id="productDesc" rows="3" required placeholder="Jelaskan cita rasa dan keunggulan produk..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Gambar Produk *</label>
+          <div class="image-input-choice">
+            <input type="text" id="productImageUrl" placeholder="Masukkan URL / Path Gambar (misal: assets/images/kerupuk_ikan.png)">
+            <p class="form-help">Atau upload gambar dari komputer Anda:</p>
+            <input type="file" id="productImageFile" accept="image/*" onchange="previewImageFile(event)">
+          </div>
+          <div class="image-preview-container" id="imagePreviewBox">
+            <img id="imagePreview" src="assets/images/kerupuk_ikan.png" alt="Preview">
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Batal</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveProduct">Simpan Produk</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div class="admin-modal-overlay" id="deleteModalOverlay">
+    <div class="admin-modal" style="max-width: 420px; padding: 24px; text-align: center;">
+      <h3 style="margin-bottom: 12px; font-size: 1.3rem;">Hapus Produk?</h3>
+      <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 0.95rem;">
+        Apakah Anda yakin ingin menghapus produk <strong id="deleteProductName" style="color: var(--text-dark);"></strong>? Tindakan ini tidak dapat dibatalkan.
+      </p>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button class="btn btn-secondary" onclick="closeDeleteModal()">Batal</button>
+        <button class="btn btn-primary" style="background-color: #d95314;" onclick="confirmDeleteProduct()">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE PASSWORD MODAL -->
+  <div class="admin-modal-overlay" id="changePasswordModalOverlay">
+    <div class="admin-modal" style="max-width: 440px;">
+      <div class="admin-modal-header">
+        <h3>Ubah Password Admin</h3>
+        <button class="close-modal" onclick="closeChangePasswordModal()">&times;</button>
+      </div>
+
+      <form id="changePasswordForm" onsubmit="saveNewPassword(event)">
+        <div class="form-group">
+          <label for="currentPassword">Password Saat Ini *</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="currentPassword" required placeholder="Masukkan password lama">
+            <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('currentPassword', 'eyeIconCurr')">
+              <svg id="eyeIconCurr" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword">Password Baru *</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="newPassword" required minlength="4" placeholder="Minimal 4 karakter">
+            <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('newPassword', 'eyeIconNew')">
+              <svg id="eyeIconNew" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Konfirmasi Password Baru *</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="confirmPassword" required placeholder="Ulangi password baru">
+            <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('confirmPassword', 'eyeIconConf')">
+              <svg id="eyeIconConf" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="login-error-msg" id="changePwdError" style="display: none;"></div>
+        <div class="login-success-msg" id="changePwdSuccess" style="display: none;"></div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeChangePasswordModal()">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Password Baru</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

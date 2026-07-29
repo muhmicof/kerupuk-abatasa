@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kerupuk Abatasa - Kerenyahan Asli Indonesia, Hadir Lebih Segar</title>
+  <meta name="description" content="Kerupuk Abatasa menyediakan aneka kerupuk tradisional khas Indonesia berkulitas tinggi, 100% alami, renyah, dan gurih tanpa pengawet.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- HEADER NAVBAR -->
+  <header class="header">
+    <div class="container">
+      <a href="#" class="logo">Kerupuk <span>Abatasa</span></a>
+
+      <nav>
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="#beranda" class="nav-link active">Beranda</a></li>
+          <li><a href="#tentang" class="nav-link">Tentang Kami</a></li>
+          <li><a href="#kontak" class="nav-link">Kontak</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="cart-trigger" id="cartToggle" aria-label="Keranjang Belanja">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" id="cartCount">0</span>
+        </button>
+
+        <a href="https://wa.me/6281234567890?text=Halo%20Kerupuk%20Abatasa,%20saya%20ingin%20bertanya%20mengenai%20produk%20dan%20pemesanan" target="_blank" class="btn btn-brown">Hubungi Kami</a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="beranda">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <h1>Kerenyahan Asli Indonesia, Hadir Lebih Segar</h1>
+        <p>Nikmati aneka kerupuk tradisional khas Indonesia yang dibuat dari bahan pilihan berkualitas tinggi, digoreng dengan minyak nabati murni untuk kerenyahan maksimal.</p>
+        <div class="hero-buttons">
+          <a href="#produk" class="btn btn-primary">Lihat Produk</a>
+          <a href="#tentang" class="btn btn-secondary">Tentang Kami</a>
+        </div>
+      </div>
+      <div class="hero-image-wrapper">
+        <div class="hero-image-card">
+          <img src="assets/images/hero_kerupuk.png" alt="Bowl of crunchy Kerupuk Abatasa with sambal">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="features">
+    <div class="container features-grid">
+      
+      <div class="feature-card">
+        <div class="feature-icon icon-green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+          </svg>
+        </div>
+        <h3>100% Alami</h3>
+        <p>Dibuat dari bahan baku pilihan terbaik tanpa bahan pengawet sintetis untuk kesehatan keluarga Anda.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-orange">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <h3>Tanpa Pengawet</h3>
+        <p>Diproses menggunakan resep tradisional tanpa tambahan zat pewarna maupun pengawet buatan.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="7"></circle>
+            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+          </svg>
+        </div>
+        <h3>Resep Warisan</h3>
+        <p>Melestarikan cita rasa asli resep keluarga yang telah dipercaya lintas generasi sejak puluhan tahun.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRODUCTS SECTION -->
+  <section class="products" id="produk">
+    <div class="container">
+      <div class="products-header">
+        <div class="products-title">
+          <span class="section-tag">PRODUK UNGGULAN</span>
+          <h2>Pilihan Kerenyahan Favorit</h2>
+        </div>
+        <a href="#produk" class="products-link">Lihat Semua Produk &rarr;</a>
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+        
+        <!-- Product 1 -->
+        <div class="product-card" data-name="kerupuk ikan">
+          <div class="product-img-wrapper">
+            <span class="product-badge">Paling Laris</span>
+            <img src="assets/images/kerupuk_ikan.png" alt="Kerupuk Ikan">
+          </div>
+          <div class="product-info">
+            <h3>Kerupuk Ikan</h3>
+            <p>Kerupuk gurih dengan cita rasa ikan tenggiri asli segar dan tekstur super renyah.</p>
+            <div class="product-footer">
+              <span class="product-price"><span class="currency">Rp</span><span class="price-val">25.000</span></span>
+              <button class="btn btn-buy" onclick="addToCart('Kerupuk Ikan', 25000, 'assets/images/kerupuk_ikan.png')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                Beli Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card" data-name="kerupuk udang">
+          <div class="product-img-wrapper">
+            <img src="assets/images/kerupuk_udang.png" alt="Kerupuk Udang">
+          </div>
+          <div class="product-info">
+            <h3>Kerupuk Udang</h3>
+            <p>Tekstur renyah mekar dengan paduan rasa udang olahan spesial dan rasa manis gurih alami.</p>
+            <div class="product-footer">
+              <span class="product-price"><span class="currency">Rp</span><span class="price-val">30.000</span></span>
+              <button class="btn btn-buy" onclick="addToCart('Kerupuk Udang', 30000, 'assets/images/kerupuk_udang.png')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                Beli Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card" data-name="kerupuk bawang">
+          <div class="product-img-wrapper">
+            <img src="assets/images/kerupuk_bawang.png" alt="Kerupuk Bawang">
+          </div>
+          <div class="product-info">
+            <h3>Kerupuk Bawang</h3>
+            <p>Aroma gurih khas bawang putih pilihan yang nikmat & pas sebagai teman makan nasi.</p>
+            <div class="product-footer">
+              <span class="product-price"><span class="currency">Rp</span><span class="price-val">15.000</span></span>
+              <button class="btn btn-buy" onclick="addToCart('Kerupuk Bawang', 15000, 'assets/images/kerupuk_bawang.png')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                Beli Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card" data-name="kerupuk kaleng">
+          <div class="product-img-wrapper">
+            <img src="assets/images/kerupuk_kaleng.png" alt="Kerupuk Kaleng">
+          </div>
+          <div class="product-info">
+            <h3>Kerupuk Kaleng</h3>
+            <p>Kerupuk mawar legendaris dalam kemasan kaleng ikonik khas Indonesia yang selalu fresh.</p>
+            <div class="product-footer">
+              <span class="product-price"><span class="currency">Rp</span><span class="price-val">5.000</span></span>
+              <button class="btn btn-buy" onclick="addToCart('Kerupuk Kaleng', 5000, 'assets/images/kerupuk_kaleng.png')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                Beli Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section class="about" id="tentang">
+    <div class="container about-grid">
+      <div class="about-image">
+        <img src="assets/images/kerupuk_process.png" alt="Traditional craftsmanship with modern quality">
+      </div>
+      <div class="about-content">
+        <span class="section-tag">TENTANG KAMI</span>
+        <h2>Warisan Tradisional dengan Kualitas Modern</h2>
+        <p>Semua produk diproses dengan standar kebersihan tinggi tanpa mengurangi cita rasa asli. Kami menggabungkan tradisi pengolahan resep kuno dengan teknologi higienis modern industri pangan.</p>
+        
+        <ul class="checklist">
+          <li>
+            <span class="check-icon">✓</span>
+            Bahan baku 100% dari petani lokal pilihan
+          </li>
+          <li>
+            <span class="check-icon">✓</span>
+            Proses pengeringan & penggorengan higienis
+          </li>
+          <li>
+            <span class="check-icon">✓</span>
+            Kemasan tahan lembab, renyah tahan lama
+          </li>
+        </ul>
+
+        <a href="#kontak" class="btn btn-brown">Baca Selengkapnya</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS SECTION -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="testimonials-header">
+        <h2>Apa Kata Pecinta Kerupuk?</h2>
+        <p>Kepercayaan dan kepuasan pelanggan adalah kebanggaan utama kami</p>
+      </div>
+
+      <div class="testimonials-grid">
+        
+        <div class="testimonial-card">
+          <div>
+            <div class="rating-stars">★★★★★</div>
+            <p class="testimonial-text">"Rasanya gurih dan sangat renyah. Kerupuk ikan favorit keluarga kami! Kemasannya juga sangat rapi dan cepat sampai."</p>
+          </div>
+          <div class="user-profile">
+            <div class="user-avatar">BW</div>
+            <div class="user-details">
+              <h4>Budi Wijaya</h4>
+              <p>Pencinta Kuliner</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div>
+            <div class="rating-stars">★★★★★</div>
+            <p class="testimonial-text">"Sangat senang ada kerupuk yang rasanya renyah seperti resep nenek. Kerupuk kalengnya selalu ada di meja makan keluarga!"</p>
+          </div>
+          <div class="user-profile">
+            <div class="user-avatar">SL</div>
+            <div class="user-details">
+              <h4>Siska Lestari</h4>
+              <p>Ibu Rumah Tangga</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div>
+            <div class="rating-stars">★★★★★</div>
+            <p class="testimonial-text">"Kerupuk udangnya sangat renyah dan gurih, pas sekali pendamping makan soto maupun nasi goreng."</p>
+          </div>
+          <div class="user-profile">
+            <div class="user-avatar">AP</div>
+            <div class="user-details">
+              <h4>Andi Pratama</h4>
+              <p>Food Blogger</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- STORE LOCATION & MAP SECTION -->
+  <section class="store-section" id="kontak">
+    <div class="container">
+      <div class="map-container-box">
+        
+        <!-- Interactive Canvas / Map Background Simulation -->
+        <div class="map-canvas">
+          <div class="map-route-line"></div>
+          
+          <!-- Map Pins -->
+          <div class="map-pin active" style="top: 45%; left: 52%;" onclick="selectStore(0)">
+            <div class="pin-icon"><span>1</span></div>
+          </div>
+          <div class="map-pin" style="top: 60%; left: 48%;" onclick="selectStore(1)">
+            <div class="pin-icon"><span>2</span></div>
+          </div>
+          <div class="map-pin" style="top: 38%; left: 62%;" onclick="selectStore(2)">
+            <div class="pin-icon"><span>3</span></div>
+          </div>
+          <div class="map-pin" style="top: 55%; left: 65%;" onclick="selectStore(3)">
+            <div class="pin-icon"><span>4</span></div>
+          </div>
+        </div>
+
+        <!-- Store Info Dark Brown Card Overlay -->
+        <div class="store-info-overlay" id="storeInfoCard">
+          <h3>Kunjungi Gerai Kami</h3>
+          
+          <div class="info-item">
+            <div class="info-icon">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            </div>
+            <div class="info-text">
+              <h5>Toko Pusat</h5>
+              <p id="storeAddress">Jl. Cempaka Putih No. 28, Jakarta Pusat</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            </div>
+            <div class="info-text">
+              <h5>Jam Operasional</h5>
+              <p id="storeHours">Senin - Sabtu: 08:00 - 20:00<br>Minggu: 09:00 - 17:00</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            </div>
+            <div class="info-text">
+              <h5>Telepon</h5>
+              <p id="storePhone">+62 812-3456-7890</p>
+            </div>
+          </div>
+
+          <button class="btn btn-white" onclick="openDirections()">Petunjuk Arah</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <div class="footer-brand">
+          <a href="#" class="logo">Kerupuk <span>Abatasa</span></a>
+          <p>Kerenyahan asli tradisi Indonesia disajikan lebih segar untuk menemani momen berharga setiap keluarga.</p>
+          <div class="social-links">
+            <a href="#" class="social-btn" aria-label="Instagram">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="#" class="social-btn" aria-label="Twitter">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Menu Utama</h4>
+          <ul class="footer-links">
+            <li><a href="#beranda">Beranda</a></li>
+            <li><a href="#tentang">Tentang Kami</a></li>
+            <li><a href="#kontak">Lokasi Gerai</a></li>
+            <li><a href="#produk">Produk Terbaru</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Dukungan</h4>
+          <ul class="footer-links">
+            <li><a href="#">Bantuan</a></li>
+            <li><a href="#">Kebijakan Privasi</a></li>
+            <li><a href="#">Syarat & Ketentuan</a></li>
+            <li><a href="#">Pengiriman</a></li>
+            <li><a href="#kontak">Kontak</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Kerupuk Abatasa. Cita Rasa Kerenyahan Indonesia.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CART DRAWER MODAL -->
+  <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCart(false)"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>Keranjang Belanja</h3>
+      <button class="close-cart" onclick="toggleCart(false)">&times;</button>
+    </div>
+    <div class="cart-body" id="cartItems">
+      <div class="cart-empty">
+        <p>Keranjang Anda masih kosong</p>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Total:</span>
+        <span id="cartTotal">Rp 0</span>
+      </div>
+      <button class="btn btn-primary" onclick="checkout()">Lanjut ke Pembayaran</button>
+    </div>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>
