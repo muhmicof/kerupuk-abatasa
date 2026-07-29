@@ -21,7 +21,7 @@ const storeLocations = [
     name: 'Toko Pusat',
     address: 'Jl. Cempaka Putih No. 28, Jakarta Pusat',
     hours: 'Senin - Sabtu: 08:00 - 20:00\nMinggu: 09:00 - 17:00',
-    phone: '+62 812-3456-7890'
+    phone: '+62 855-5920-1206'
   },
   {
     name: 'Cabang Jakarta Selatan',
@@ -290,7 +290,7 @@ function checkout() {
     return;
   }
 
-  const phone = '6281234567890';
+  const phone = '6285559201206';
   let message = 'Halo Kerupuk Abatasa! Saya ingin memesan produk berikut:\n\n';
   
   let grandTotal = 0;
