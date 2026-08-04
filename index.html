@@ -281,6 +281,7 @@
     <div class="container">
       <div class="map-container-box">
         
+        <!-- Interactive Canvas / Map Background Simulation -->
         <div class="map-canvas">
           <iframe
             class="map-embed"
@@ -293,19 +294,35 @@
             referrerpolicy="strict-origin-when-cross-origin"
             title="Lokasi Rumah Abatasa">
           </iframe>
+
+          <div class="map-route-line"></div>
+          
+          <!-- Map Pins -->
+          <div class="map-pin active" style="top: 45%; left: 52%;" onclick="selectStore(0)">
+            <div class="pin-icon"><span>1</span></div>
+          </div>
+          <div class="map-pin" style="top: 60%; left: 48%;" onclick="selectStore(1)">
+            <div class="pin-icon"><span>2</span></div>
+          </div>
+          <div class="map-pin" style="top: 38%; left: 62%;" onclick="selectStore(2)">
+            <div class="pin-icon"><span>3</span></div>
+          </div>
+          <div class="map-pin" style="top: 55%; left: 65%;" onclick="selectStore(3)">
+            <div class="pin-icon"><span>4</span></div>
+          </div>
         </div>
 
         <!-- Store Info Dark Brown Card Overlay -->
         <div class="store-info-overlay" id="storeInfoCard">
-          <h3>Jl. Dawe Kudus, Dalangan, Lau, Kec. Dawe, Kabupaten Kudus, Jawa Tengah 59353</h3>
+          <h3>Kunjungi Gerai Kami</h3>
           
           <div class="info-item">
             <div class="info-icon">
               <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
             </div>
             <div class="info-text">
-              <h5>Alamat</h5>
-              <p id="storeAddress">Rumah ABATASA</p>
+              <h5>Toko Pusat</h5>
+              <p id="storeAddress">Jl. Cempaka Putih No. 28, Jakarta Pusat</p>
             </div>
           </div>
 
