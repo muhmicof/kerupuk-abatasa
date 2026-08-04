@@ -837,16 +837,6 @@ button {
   border: 0;
 }
 
-.map-route-line {
-  position: absolute;
-  top: 50%;
-  left: 30%;
-  width: 50%;
-  height: 2px;
-  border-top: 3px dashed #b0bcc4;
-  transform: rotate(-15deg);
-}
-
 /* Map Pins */
 .map-pin {
   position: absolute;
