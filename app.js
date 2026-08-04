@@ -18,28 +18,10 @@ const navMenu = document.getElementById('navMenu');
 // Store Locations Data
 const storeLocations = [
   {
-    name: 'Toko Pusat',
-    address: 'Jl. Cempaka Putih No. 28, Jakarta Pusat',
+    name: 'Rumah ABATASA',
+    address: 'Rumah ABATASA',
     hours: 'Senin - Sabtu: 08:00 - 20:00\nMinggu: 09:00 - 17:00',
     phone: '+62 858-0206-0908'
-  },
-  {
-    name: 'Cabang Jakarta Selatan',
-    address: 'Jl. Kemang Raya No. 14, Jakarta Selatan',
-    hours: 'Senin - Minggu: 09:00 - 21:00',
-    phone: '+62 812-9876-5432'
-  },
-  {
-    name: 'Cabang Jakarta Timur',
-    address: 'Jl. Pemuda No. 45, Rawamangun, Jakarta Timur',
-    hours: 'Senin - Sabtu: 08:30 - 20:30',
-    phone: '+62 813-1122-3344'
-  },
-  {
-    name: 'Cabang Jakarta Barat',
-    address: 'Jl. Puri Indah Raya No. 10, Jakarta Barat',
-    hours: 'Senin - Minggu: 09:00 - 20:00',
-    phone: '+62 815-5566-7788'
   }
 ];
 
