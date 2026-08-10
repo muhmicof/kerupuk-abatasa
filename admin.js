@@ -39,9 +39,51 @@ const DEFAULT_PRODUCTS = [
 
 const DEFAULT_PASSWORD = 'admin123';
 
+// Real-time Synchronization Channel
+const realtimeChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('kerupuk_realtime_channel') : null;
+
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
+  setupAdminRealtimeListeners();
 });
+
+// Real-time synchronization for multi-tab Admin Dashboard
+function setupAdminRealtimeListeners() {
+  if (realtimeChannel) {
+    realtimeChannel.onmessage = (event) => {
+      if (event.data && event.data.type === 'PRODUCTS_UPDATED') {
+        loadProductsSilently();
+      }
+    };
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'kerupuk_products') {
+      loadProductsSilently();
+    }
+  });
+}
+
+function loadProductsSilently() {
+  const saved = localStorage.getItem('kerupuk_products');
+  if (saved) {
+    try {
+      products = JSON.parse(saved);
+    } catch (e) {
+      products = [...DEFAULT_PRODUCTS];
+    }
+  }
+  renderAdminTable();
+  updateStats();
+}
+
+function notifyRealtimeUpdate(action = 'update') {
+  const payload = { type: 'PRODUCTS_UPDATED', action, timestamp: Date.now() };
+  if (realtimeChannel) {
+    realtimeChannel.postMessage(payload);
+  }
+  window.dispatchEvent(new CustomEvent('kerupuk_products_updated', { detail: payload }));
+}
 
 // Check Authentication status
 function checkAuth() {
@@ -189,8 +231,9 @@ function loadProducts() {
 }
 
 // Save current products to localStorage
-function saveToLocalStorage() {
+function saveToLocalStorage(action = 'save') {
   localStorage.setItem('kerupuk_products', JSON.stringify(products));
+  notifyRealtimeUpdate(action);
 }
 
 // Render Table Rows
@@ -322,7 +365,7 @@ function saveProduct(event) {
     products.push({ id: newId, name, price, badge, desc, image });
   }
 
-  saveToLocalStorage();
+  saveToLocalStorage('save');
   renderAdminTable();
   updateStats();
   closeProductModal();
@@ -347,7 +390,7 @@ function deleteProduct(id) {
 function confirmDeleteProduct() {
   if (deleteTargetId !== null) {
     products = products.filter(p => String(p.id) !== String(deleteTargetId));
-    saveToLocalStorage();
+    saveToLocalStorage('delete');
     renderAdminTable();
     updateStats();
     deleteTargetId = null;
@@ -365,7 +408,7 @@ function closeDeleteModal() {
 function resetDefaultProducts() {
   if (confirm('Apakah Anda yakin ingin mengembalikan daftar produk ke awal (default)?')) {
     products = [...DEFAULT_PRODUCTS];
-    saveToLocalStorage();
+    saveToLocalStorage('reset');
     renderAdminTable();
     updateStats();
     alert('Daftar produk telah direset ke default.');

@@ -25,14 +25,57 @@ const storeLocations = [
   }
 ];
 
+// Real-time Synchronization Channel
+const realtimeChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('kerupuk_realtime_channel') : null;
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
+  setupRealtimeListeners();
   renderFrontendProducts();
 });
 
+// Setup Real-time Listeners across tabs & windows
+function setupRealtimeListeners() {
+  if (realtimeChannel) {
+    realtimeChannel.onmessage = (event) => {
+      if (event.data && event.data.type === 'PRODUCTS_UPDATED') {
+        handleRealtimeProductUpdate(event.data.action);
+      }
+    };
+  }
+
+  // Fallback for cross-tab localStorage storage events
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'kerupuk_products') {
+      handleRealtimeProductUpdate('storage');
+    }
+  });
+
+  // Listener for custom events dispatched on the same window
+  window.addEventListener('kerupuk_products_updated', (e) => {
+    handleRealtimeProductUpdate(e.detail ? e.detail.action : 'update');
+  });
+}
+
+// Handle incoming real-time update
+function handleRealtimeProductUpdate(action) {
+  renderFrontendProducts(true);
+
+  let actionText = '⚡ Katalog produk diperbarui secara real-time!';
+  if (action === 'save') {
+    actionText = '⚡ Produk baru / perubahan diperbarui secara real-time!';
+  } else if (action === 'delete') {
+    actionText = '⚡ Daftar produk disinkronkan secara real-time!';
+  } else if (action === 'reset') {
+    actionText = '⚡ Katalog direset ke default secara real-time!';
+  }
+
+  showToast(actionText);
+}
+
 // Render Products from LocalStorage
-function renderFrontendProducts() {
+function renderFrontendProducts(isRealtime = false) {
   const container = document.getElementById('productsGrid');
   if (!container) return;
 
@@ -92,7 +135,7 @@ function renderFrontendProducts() {
   products.forEach(p => {
     const escapedName = p.name.replace(/'/g, "\\'");
     html += `
-      <div class="product-card">
+      <div class="product-card ${isRealtime ? 'realtime-flash' : ''}">
         <div class="product-img-wrapper">
           ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
           <img src="${p.image}" alt="${p.name}" onerror="this.src='assets/images/kerupuk_ikan.png'">
@@ -113,6 +156,14 @@ function renderFrontendProducts() {
   });
 
   container.innerHTML = html;
+
+  if (isRealtime) {
+    setTimeout(() => {
+      document.querySelectorAll('.product-card.realtime-flash').forEach(card => {
+        card.classList.remove('realtime-flash');
+      });
+    }, 1500);
+  }
 }
 
 function setupEventListeners() {
