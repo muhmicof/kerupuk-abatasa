@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Kerupuk Abatasa - Interactive Application Script
+   Kerupuk Abatasa - Interactive Application Script (Supabase Edition)
    ========================================================================== */
 
 // State
@@ -25,106 +25,44 @@ const storeLocations = [
   }
 ];
 
-// Real-time Synchronization Channel
-const realtimeChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('kerupuk_realtime_channel') : null;
-
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
-  setupRealtimeListeners();
-  renderFrontendProducts();
+  loadProductsFromSupabase();
+  setupSupabaseRealtime();
 });
 
-// Setup Real-time Listeners across tabs & windows
-function setupRealtimeListeners() {
-  if (realtimeChannel) {
-    realtimeChannel.onmessage = (event) => {
-      if (event.data && event.data.type === 'PRODUCTS_UPDATED') {
-        handleRealtimeProductUpdate(event.data.action);
-      }
-    };
-  }
+// ==================== SUPABASE PRODUCT FUNCTIONS ====================
 
-  // Fallback for cross-tab localStorage storage events
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'kerupuk_products') {
-      handleRealtimeProductUpdate('storage');
-    }
-  });
-
-  // Listener for custom events dispatched on the same window
-  window.addEventListener('kerupuk_products_updated', (e) => {
-    handleRealtimeProductUpdate(e.detail ? e.detail.action : 'update');
-  });
-}
-
-// Handle incoming real-time update
-function handleRealtimeProductUpdate(action) {
-  renderFrontendProducts(true);
-
-  let actionText = '⚡ Katalog produk diperbarui secara real-time!';
-  if (action === 'save') {
-    actionText = '⚡ Produk baru / perubahan diperbarui secara real-time!';
-  } else if (action === 'delete') {
-    actionText = '⚡ Daftar produk disinkronkan secara real-time!';
-  } else if (action === 'reset') {
-    actionText = '⚡ Katalog direset ke default secara real-time!';
-  }
-
-  showToast(actionText);
-}
-
-// Render Products from LocalStorage
-function renderFrontendProducts(isRealtime = false) {
+// Fetch products from Supabase
+async function loadProductsFromSupabase() {
   const container = document.getElementById('productsGrid');
   if (!container) return;
 
-  const defaultProducts = [
-    {
-      id: 1,
-      name: 'Kerupuk Ikan',
-      price: 25000,
-      badge: 'Paling Laris',
-      desc: 'Kerupuk gurih dengan cita rasa ikan tenggiri asli segar dan tekstur super renyah.',
-      image: 'assets/images/kerupuk_ikan.png'
-    },
-    {
-      id: 2,
-      name: 'Kerupuk Udang',
-      price: 30000,
-      badge: '',
-      desc: 'Tekstur renyah mekar dengan paduan rasa udang olahan spesial dan rasa manis gurih alami.',
-      image: 'assets/images/kerupuk_udang.png'
-    },
-    {
-      id: 3,
-      name: 'Kerupuk Bawang',
-      price: 15000,
-      badge: '',
-      desc: 'Aroma gurih khas bawang putih pilihan yang nikmat & pas sebagai teman makan nasi.',
-      image: 'assets/images/kerupuk_bawang.png'
-    },
-    {
-      id: 4,
-      name: 'Kerupuk Kaleng',
-      price: 5000,
-      badge: '',
-      desc: 'Kerupuk mawar legendaris dalam kemasan kaleng ikonik khas Indonesia yang selalu fresh.',
-      image: 'assets/images/kerupuk_kaleng.png'
-    }
-  ];
+  try {
+    const { data, error } = await supabaseClient
+      .from('products')
+      .select('*')
+      .order('id', { ascending: true });
 
-  const saved = localStorage.getItem('kerupuk_products');
-  let products = defaultProducts;
-  if (saved) {
-    try {
-      products = JSON.parse(saved);
-    } catch(e) {
-      products = defaultProducts;
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      container.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">Belum ada produk yang ditampilkan.</p>`;
+      return;
     }
-  } else {
-    localStorage.setItem('kerupuk_products', JSON.stringify(defaultProducts));
+
+    renderProductCards(data, false);
+  } catch (err) {
+    console.error('Error loading products from Supabase:', err);
+    container.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 40px; color: #d95314;">⚠️ Gagal memuat produk. Silakan refresh halaman.</p>`;
   }
+}
+
+// Render product cards to the grid
+function renderProductCards(products, isRealtime = false) {
+  const container = document.getElementById('productsGrid');
+  if (!container) return;
 
   if (products.length === 0) {
     container.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">Belum ada produk yang ditampilkan.</p>`;
@@ -165,6 +103,47 @@ function renderFrontendProducts(isRealtime = false) {
     }, 1500);
   }
 }
+
+// Setup Supabase Realtime subscription for live product updates
+function setupSupabaseRealtime() {
+  supabaseClient
+    .channel('public:products')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, (payload) => {
+      console.log('🔄 Realtime update received:', payload.eventType);
+      
+      let actionText = '⚡ Katalog produk diperbarui secara real-time!';
+      if (payload.eventType === 'INSERT') {
+        actionText = '⚡ Produk baru ditambahkan secara real-time!';
+      } else if (payload.eventType === 'UPDATE') {
+        actionText = '⚡ Produk diperbarui secara real-time!';
+      } else if (payload.eventType === 'DELETE') {
+        actionText = '⚡ Daftar produk disinkronkan secara real-time!';
+      }
+
+      // Re-fetch all products to get the latest state
+      reloadProductsRealtime(actionText);
+    })
+    .subscribe();
+}
+
+// Reload products after realtime event
+async function reloadProductsRealtime(toastMessage) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('products')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+
+    renderProductCards(data || [], true);
+    showToast(toastMessage);
+  } catch (err) {
+    console.error('Error reloading products:', err);
+  }
+}
+
+// ==================== CART FUNCTIONS ====================
 
 function setupEventListeners() {
   // Cart Toggle

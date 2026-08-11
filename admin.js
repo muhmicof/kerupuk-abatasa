@@ -1,10 +1,9 @@
 /* ==========================================================================
-   Kerupuk Abatasa - Admin Dashboard Script (localStorage Product CRUD)
+   Kerupuk Abatasa - Admin Dashboard Script (Supabase Product CRUD)
    ========================================================================== */
 
 const DEFAULT_PRODUCTS = [
   {
-    id: 1,
     name: 'Kerupuk Ikan',
     price: 25000,
     badge: 'Paling Laris',
@@ -12,7 +11,6 @@ const DEFAULT_PRODUCTS = [
     image: 'assets/images/kerupuk_ikan.png'
   },
   {
-    id: 2,
     name: 'Kerupuk Udang',
     price: 30000,
     badge: '',
@@ -20,7 +18,6 @@ const DEFAULT_PRODUCTS = [
     image: 'assets/images/kerupuk_udang.png'
   },
   {
-    id: 3,
     name: 'Kerupuk Bawang',
     price: 15000,
     badge: '',
@@ -28,7 +25,6 @@ const DEFAULT_PRODUCTS = [
     image: 'assets/images/kerupuk_bawang.png'
   },
   {
-    id: 4,
     name: 'Kerupuk Kaleng',
     price: 5000,
     badge: '',
@@ -39,51 +35,44 @@ const DEFAULT_PRODUCTS = [
 
 const DEFAULT_PASSWORD = 'admin123';
 
-// Real-time Synchronization Channel
-const realtimeChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('kerupuk_realtime_channel') : null;
+// Products state
+let products = [];
+let pendingImageFile = null; // File object to upload to Supabase Storage
 
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
-  setupAdminRealtimeListeners();
+  setupSupabaseRealtimeAdmin();
 });
 
-// Real-time synchronization for multi-tab Admin Dashboard
-function setupAdminRealtimeListeners() {
-  if (realtimeChannel) {
-    realtimeChannel.onmessage = (event) => {
-      if (event.data && event.data.type === 'PRODUCTS_UPDATED') {
-        loadProductsSilently();
-      }
-    };
-  }
+// ==================== SUPABASE REALTIME (ADMIN) ====================
 
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'kerupuk_products') {
+function setupSupabaseRealtimeAdmin() {
+  supabaseClient
+    .channel('admin:products')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
+      // Silently reload products when changes come from another tab/device
       loadProductsSilently();
-    }
-  });
+    })
+    .subscribe();
 }
 
-function loadProductsSilently() {
-  const saved = localStorage.getItem('kerupuk_products');
-  if (saved) {
-    try {
-      products = JSON.parse(saved);
-    } catch (e) {
-      products = [...DEFAULT_PRODUCTS];
-    }
+async function loadProductsSilently() {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+    products = data || [];
+    renderAdminTable();
+    updateStats();
+  } catch (err) {
+    console.error('Silent reload failed:', err);
   }
-  renderAdminTable();
-  updateStats();
 }
 
-function notifyRealtimeUpdate(action = 'update') {
-  const payload = { type: 'PRODUCTS_UPDATED', action, timestamp: Date.now() };
-  if (realtimeChannel) {
-    realtimeChannel.postMessage(payload);
-  }
-  window.dispatchEvent(new CustomEvent('kerupuk_products_updated', { detail: payload }));
-}
+// ==================== AUTHENTICATION ====================
 
 // Check Authentication status
 function checkAuth() {
@@ -159,7 +148,8 @@ function togglePasswordVisibility(inputId, iconId) {
   }
 }
 
-// Change Password Modal functions
+// ==================== CHANGE PASSWORD ====================
+
 function openChangePasswordModal() {
   document.getElementById('currentPassword').value = '';
   document.getElementById('newPassword').value = '';
@@ -211,30 +201,229 @@ function saveNewPassword(event) {
   }, 1200);
 }
 
-// Load products from localStorage or initialize defaults
-function loadProducts() {
-  const saved = localStorage.getItem('kerupuk_products');
-  if (saved) {
-    try {
-      products = JSON.parse(saved);
-    } catch (e) {
-      products = [...DEFAULT_PRODUCTS];
-      saveToLocalStorage();
-    }
-  } else {
-    products = [...DEFAULT_PRODUCTS];
-    saveToLocalStorage();
+// ==================== SUPABASE CRUD ====================
+
+// Load products from Supabase
+async function loadProducts() {
+  const tbody = document.getElementById('adminProductTable');
+  if (tbody) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">
+          <div class="loading-spinner"></div> Memuat produk dari Supabase...
+        </td>
+      </tr>
+    `;
   }
 
-  renderAdminTable();
-  updateStats();
+  try {
+    const { data, error } = await supabaseClient
+      .from('products')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+
+    products = data || [];
+    renderAdminTable();
+    updateStats();
+  } catch (err) {
+    console.error('Error loading products:', err);
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align:center; padding:30px; color:#d95314;">
+            ⚠️ Gagal memuat produk dari Supabase: ${err.message}
+          </td>
+        </tr>
+      `;
+    }
+  }
 }
 
-// Save current products to localStorage
-function saveToLocalStorage(action = 'save') {
-  localStorage.setItem('kerupuk_products', JSON.stringify(products));
-  notifyRealtimeUpdate(action);
+// Upload image file to Supabase Storage
+async function uploadImageToStorage(file) {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+  const filePath = `products/${fileName}`;
+
+  const { data, error } = await supabaseClient.storage
+    .from('product-images')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (error) throw error;
+
+  // Get public URL
+  const { data: urlData } = supabaseClient.storage
+    .from('product-images')
+    .getPublicUrl(filePath);
+
+  return urlData.publicUrl;
 }
+
+// Delete image from Supabase Storage (cleanup)
+async function deleteImageFromStorage(imageUrl) {
+  if (!imageUrl || !imageUrl.includes('product-images')) return;
+  try {
+    // Extract path from the full URL
+    const parts = imageUrl.split('/product-images/');
+    if (parts.length < 2) return;
+    const filePath = parts[1];
+    await supabaseClient.storage.from('product-images').remove([filePath]);
+  } catch (err) {
+    console.warn('Could not delete old image:', err);
+  }
+}
+
+// Save Product (Create or Update) — via Supabase
+async function saveProduct(event) {
+  event.preventDefault();
+
+  const idInput = document.getElementById('productId').value;
+  const name = document.getElementById('productName').value.trim();
+  const price = parseFloat(document.getElementById('productPrice').value);
+  const badge = document.getElementById('productBadge').value.trim();
+  const desc = document.getElementById('productDesc').value.trim();
+  let image = document.getElementById('productImageUrl').value.trim();
+
+  if (!image) {
+    image = 'assets/images/kerupuk_ikan.png';
+  }
+
+  const btnSave = document.getElementById('btnSaveProduct');
+  const originalText = btnSave.textContent;
+  btnSave.textContent = 'Mengupload...';
+  btnSave.disabled = true;
+
+  try {
+    // Upload image to Supabase Storage if a new file was selected
+    if (pendingImageFile) {
+      btnSave.textContent = 'Mengupload gambar...';
+      image = await uploadImageToStorage(pendingImageFile);
+      pendingImageFile = null;
+    }
+
+    btnSave.textContent = 'Menyimpan...';
+
+    if (idInput) {
+      // If editing, delete old image from storage if it changed
+      const oldProduct = products.find(p => String(p.id) === String(idInput));
+      if (oldProduct && oldProduct.image !== image && oldProduct.image.includes('product-images')) {
+        await deleteImageFromStorage(oldProduct.image);
+      }
+
+      // Update existing product
+      const { error } = await supabaseClient
+        .from('products')
+        .update({ name, price, badge, desc, image })
+        .eq('id', Number(idInput));
+
+      if (error) throw error;
+    } else {
+      // Insert new product
+      const { error } = await supabaseClient
+        .from('products')
+        .insert([{ name, price, badge, desc, image }]);
+
+      if (error) throw error;
+    }
+
+    await loadProducts();
+    closeProductModal();
+  } catch (err) {
+    console.error('Error saving product:', err);
+    alert('Gagal menyimpan produk: ' + err.message);
+  } finally {
+    btnSave.textContent = originalText;
+    btnSave.disabled = false;
+  }
+}
+
+// Delete Product — via Supabase
+let deleteTargetId = null;
+
+function deleteProduct(id) {
+  const item = products.find(p => String(p.id) === String(id));
+  if (!item) return;
+
+  deleteTargetId = id;
+  const nameElement = document.getElementById('deleteProductName');
+  if (nameElement) nameElement.textContent = item.name;
+
+  const overlay = document.getElementById('deleteModalOverlay');
+  if (overlay) overlay.classList.add('active');
+}
+
+async function confirmDeleteProduct() {
+  if (deleteTargetId !== null) {
+    try {
+      // Delete image from Storage first
+      const item = products.find(p => String(p.id) === String(deleteTargetId));
+      if (item && item.image) {
+        await deleteImageFromStorage(item.image);
+      }
+
+      const { error } = await supabaseClient
+        .from('products')
+        .delete()
+        .eq('id', Number(deleteTargetId));
+
+      if (error) throw error;
+
+      await loadProducts();
+    } catch (err) {
+      console.error('Error deleting product:', err);
+      alert('Gagal menghapus produk: ' + err.message);
+    }
+    deleteTargetId = null;
+  }
+  closeDeleteModal();
+}
+
+function closeDeleteModal() {
+  const overlay = document.getElementById('deleteModalOverlay');
+  if (overlay) overlay.classList.remove('active');
+}
+
+// Reset to Default Products — via Supabase
+async function resetDefaultProducts() {
+  if (confirm('Apakah Anda yakin ingin mengembalikan daftar produk ke awal (default)? Semua produk saat ini akan dihapus.')) {
+    try {
+      // Delete all images from Storage
+      for (const p of products) {
+        if (p.image && p.image.includes('product-images')) {
+          await deleteImageFromStorage(p.image);
+        }
+      }
+
+      // Delete all existing products
+      const { error: deleteError } = await supabaseClient
+        .from('products')
+        .delete()
+        .neq('id', 0); // Delete all rows
+
+      if (deleteError) throw deleteError;
+
+      // Insert default products
+      const { error: insertError } = await supabaseClient
+        .from('products')
+        .insert(DEFAULT_PRODUCTS);
+
+      if (insertError) throw insertError;
+
+      await loadProducts();
+      alert('Daftar produk telah direset ke default.');
+    } catch (err) {
+      console.error('Error resetting products:', err);
+      alert('Gagal mereset produk: ' + err.message);
+    }
+  }
+}
+
+// ==================== UI RENDERING ====================
 
 // Render Table Rows
 function renderAdminTable() {
@@ -287,8 +476,11 @@ function updateStats() {
   document.getElementById('statFeaturedProducts').textContent = featured;
 }
 
+// ==================== PRODUCT MODAL ====================
+
 // Open Modal for Add
 function openProductModal() {
+  pendingImageFile = null;
   document.getElementById('modalTitle').textContent = 'Tambah Produk Baru';
   document.getElementById('productId').value = '';
   document.getElementById('productName').value = '';
@@ -296,6 +488,7 @@ function openProductModal() {
   document.getElementById('productBadge').value = '';
   document.getElementById('productDesc').value = '';
   document.getElementById('productImageUrl').value = 'assets/images/kerupuk_ikan.png';
+  document.getElementById('productImageUrl').placeholder = 'Masukkan URL / Path Gambar (misal: assets/images/kerupuk_ikan.png)';
   document.getElementById('productImageFile').value = '';
   document.getElementById('imagePreview').src = 'assets/images/kerupuk_ikan.png';
 
@@ -304,6 +497,7 @@ function openProductModal() {
 
 // Open Modal for Edit
 function editProduct(id) {
+  pendingImageFile = null;
   const item = products.find(p => String(p.id) === String(id));
   if (!item) return;
 
@@ -314,6 +508,8 @@ function editProduct(id) {
   document.getElementById('productBadge').value = item.badge || '';
   document.getElementById('productDesc').value = item.desc;
   document.getElementById('productImageUrl').value = item.image;
+  document.getElementById('productImageUrl').placeholder = 'Masukkan URL / Path Gambar';
+  document.getElementById('productImageFile').value = '';
   document.getElementById('imagePreview').src = item.image;
 
   document.getElementById('productModalOverlay').classList.add('active');
@@ -324,93 +520,21 @@ function closeProductModal() {
   document.getElementById('productModalOverlay').classList.remove('active');
 }
 
-// Preview Uploaded Image File
+// Preview Uploaded Image File & store for Supabase Storage upload
 function previewImageFile(event) {
   const file = event.target.files[0];
   if (file) {
+    // Store file reference for upload on save
+    pendingImageFile = file;
+
+    // Show local preview
     const reader = new FileReader();
     reader.onload = (e) => {
       document.getElementById('imagePreview').src = e.target.result;
-      document.getElementById('productImageUrl').value = e.target.result;
+      // Clear the URL input since we'll use the uploaded file
+      document.getElementById('productImageUrl').value = '';
+      document.getElementById('productImageUrl').placeholder = `📎 ${file.name} (akan diupload saat simpan)`;
     };
     reader.readAsDataURL(file);
-  }
-}
-
-// Save Product (Create or Update)
-function saveProduct(event) {
-  event.preventDefault();
-
-  const idInput = document.getElementById('productId').value;
-  const name = document.getElementById('productName').value.trim();
-  const price = parseFloat(document.getElementById('productPrice').value);
-  const badge = document.getElementById('productBadge').value.trim();
-  const desc = document.getElementById('productDesc').value.trim();
-  let image = document.getElementById('productImageUrl').value.trim();
-
-  if (!image) {
-    image = 'assets/images/kerupuk_ikan.png';
-  }
-
-  if (idInput) {
-    // Update
-    const index = products.findIndex(p => String(p.id) === String(idInput));
-    if (index > -1) {
-      const existingId = products[index].id;
-      products[index] = { id: existingId, name, price, badge, desc, image };
-    }
-  } else {
-    // Create new
-    const newId = products.length > 0 ? Math.max(...products.map(p => Number(p.id) || 0)) + 1 : 1;
-    products.push({ id: newId, name, price, badge, desc, image });
-  }
-
-  saveToLocalStorage('save');
-  renderAdminTable();
-  updateStats();
-  closeProductModal();
-}
-
-let deleteTargetId = null;
-
-// Delete Product Modal Trigger
-function deleteProduct(id) {
-  const item = products.find(p => String(p.id) === String(id));
-  if (!item) return;
-
-  deleteTargetId = id;
-  const nameElement = document.getElementById('deleteProductName');
-  if (nameElement) nameElement.textContent = item.name;
-
-  const overlay = document.getElementById('deleteModalOverlay');
-  if (overlay) overlay.classList.add('active');
-}
-
-// Confirm Delete Action
-function confirmDeleteProduct() {
-  if (deleteTargetId !== null) {
-    products = products.filter(p => String(p.id) !== String(deleteTargetId));
-    saveToLocalStorage('delete');
-    renderAdminTable();
-    updateStats();
-    deleteTargetId = null;
-  }
-  closeDeleteModal();
-}
-
-// Close Delete Modal
-function closeDeleteModal() {
-  const overlay = document.getElementById('deleteModalOverlay');
-  if (overlay) overlay.classList.remove('active');
-}
-
-// Reset to Default Products
-function resetDefaultProducts() {
-  if (confirm('Apakah Anda yakin ingin mengembalikan daftar produk ke awal (default)?')) {
-    products = [...DEFAULT_PRODUCTS];
-    saveToLocalStorage('reset');
-    renderAdminTable();
-    updateStats();
-    alert('Daftar produk telah direset ke default.');
   }
 }
