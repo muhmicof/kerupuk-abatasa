@@ -54,11 +54,18 @@ function setupSupabaseRealtimeAdmin() {
       loadProductsSilently();
     })
     .subscribe();
+
+  supabaseClient
+    .channel('admin:visitor_logs')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'visitor_logs' }, () => {
+      loadVisitorStats();
+    })
+    .subscribe();
 }
 
 async function loadProductsSilently() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('products')
       .select('*')
       .order('id', { ascending: true });
@@ -69,6 +76,42 @@ async function loadProductsSilently() {
     updateStats();
   } catch (err) {
     console.error('Silent reload failed:', err);
+  }
+}
+
+// Load visitor stats from Supabase
+async function loadVisitorStats() {
+  const todayElem = document.getElementById('statVisitorsToday');
+  const totalElem = document.getElementById('statVisitorsTotal');
+
+  if (!todayElem || !totalElem) return;
+
+  try {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
+
+    // Total visits count
+    const { count: totalCount, error: totalErr } = await supabaseClient
+      .from('visitor_logs')
+      .select('*', { count: 'exact', head: true });
+
+    if (totalErr) throw totalErr;
+
+    // Today's visits count
+    const { count: todayCount, error: todayErr } = await supabaseClient
+      .from('visitor_logs')
+      .select('*', { count: 'exact', head: true })
+      .eq('visit_date', todayStr);
+
+    if (todayErr) throw todayErr;
+
+    todayElem.textContent = todayCount !== null ? todayCount : 0;
+    totalElem.textContent = totalCount !== null ? totalCount : 0;
+  } catch (err) {
+    console.warn('Visitor stats error (table visitor_logs may need to be initialized in Supabase):', err.message);
   }
 }
 
@@ -84,6 +127,7 @@ function checkAuth() {
     if (loginOverlay) loginOverlay.style.display = 'none';
     if (adminLayout) adminLayout.style.display = 'flex';
     loadProducts();
+    loadVisitorStats();
   } else {
     if (loginOverlay) loginOverlay.style.display = 'flex';
     if (adminLayout) adminLayout.style.display = 'none';
@@ -113,6 +157,7 @@ function handleLogin(event) {
     if (adminLayout) adminLayout.style.display = 'flex';
     
     loadProducts();
+    loadVisitorStats();
   } else {
     errorMsg.textContent = 'Password salah! Silakan coba lagi.';
     errorMsg.style.display = 'block';
