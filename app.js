@@ -30,7 +30,32 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   loadProductsFromSupabase();
   setupSupabaseRealtime();
+  trackVisitor();
 });
+
+// Record visitor hit to Supabase visitor_logs
+async function trackVisitor() {
+  try {
+    const hasVisited = sessionStorage.getItem('abatasa_visited_session');
+    if (!hasVisited) {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const todayStr = `${year}-${month}-${day}`;
+
+      const { error } = await supabaseClient
+        .from('visitor_logs')
+        .insert([{ visit_date: todayStr }]);
+
+      if (!error) {
+        sessionStorage.setItem('abatasa_visited_session', 'true');
+      }
+    }
+  } catch (err) {
+    console.warn('Visitor tracking skipped:', err);
+  }
+}
 
 // ==================== SUPABASE PRODUCT FUNCTIONS ====================
 

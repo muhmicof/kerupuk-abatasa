@@ -128,3 +128,39 @@ CREATE POLICY "Allow update product images" ON storage.objects
 -- Policy: Siapa saja bisa DELETE gambar produk
 CREATE POLICY "Allow delete product images" ON storage.objects
   FOR DELETE USING (bucket_id = 'product-images');
+
+
+-- =============================================
+-- 5. TABEL VISITOR_LOGS (Statistik Pengunjung)
+-- =============================================
+CREATE TABLE IF NOT EXISTS visitor_logs (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  visit_date DATE DEFAULT CURRENT_DATE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Index untuk filter tanggal cepat
+CREATE INDEX IF NOT EXISTS idx_visitor_logs_date ON visitor_logs(visit_date);
+
+-- RLS: Enable Row Level Security
+ALTER TABLE visitor_logs ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Publik bisa INSERT (mencatat kunjungan baru dari website utama)
+CREATE POLICY "Public insert visitor logs" ON visitor_logs
+  FOR INSERT WITH CHECK (true);
+
+-- Policy: Semua orang / Admin bisa SELECT (membaca total kunjungan)
+CREATE POLICY "Public select visitor logs" ON visitor_logs
+  FOR SELECT USING (true);
+
+-- Enable Realtime untuk visitor_logs
+ALTER PUBLICATION supabase_realtime ADD TABLE visitor_logs;
+
+-- Seed data awal pengunjung (opsional: 9 hari ini, 73 total seperti di gambar)
+-- Jalankan ini di Supabase SQL Editor jika ingin mengisi angka awal
+INSERT INTO visitor_logs (visit_date)
+SELECT CURRENT_DATE FROM generate_series(1, 9);
+
+INSERT INTO visitor_logs (visit_date)
+SELECT CURRENT_DATE - (i || ' day')::interval FROM generate_series(1, 64) AS i;
+

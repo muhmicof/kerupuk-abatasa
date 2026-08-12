@@ -566,3 +566,90 @@
   color: var(--text-dark);
 }
 
+/* ==========================================================================
+   STATISTIK PENGUNJUNG CARD
+   ========================================================================== */
+.visitor-stats-card {
+  background-color: #0b1a2b;
+  border-radius: 16px;
+  padding: 24px;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(11, 26, 43, 0.25);
+  margin-bottom: 32px;
+}
+
+.visitor-stats-header {
+  margin-bottom: 18px;
+}
+
+.visitor-stats-header h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #ffffff;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.visitor-stats-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.visitor-subcard {
+  background-color: #112338;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.visitor-subcard:hover {
+  background-color: #152b45;
+}
+
+.visitor-accent {
+  width: 4px;
+  height: 48px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.visitor-accent.blue {
+  background-color: #0091ff;
+  box-shadow: 0 0 10px rgba(0, 145, 255, 0.4);
+}
+
+.visitor-accent.yellow {
+  background-color: #ffcc00;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+}
+
+.visitor-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.visitor-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #8fa0b5;
+  text-transform: uppercase;
+}
+
+.visitor-number {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+}
+
+
