@@ -109,82 +109,12 @@
         </div>
         <a href="#produk" class="products-link">Lihat Semua Koleksi &rarr;</a>
       </div>
-
       <div class="products-grid" id="productsGrid">
-        
-        <!-- Product 1 -->
-        <div class="product-card" data-name="kerupuk ikan">
-          <div class="product-img-wrapper">
-            <span class="product-badge">Paling Laris</span>
-            <img src="assets/images/kerupuk_ikan.png" alt="Kerupuk Ikan">
-          </div>
-          <div class="product-info">
-            <h3>Kerupuk Ikan</h3>
-            <p>Kerupuk gurih dengan cita rasa ikan tenggiri asli segar dan tekstur super renyah.</p>
-            <div class="product-footer">
-              <span class="product-price"><span class="currency">Rp</span><span class="price-val">25.000</span></span>
-              <button class="btn btn-buy" onclick="addToCart('Kerupuk Ikan', 25000, 'assets/images/kerupuk_ikan.png')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                Tambah
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 2 -->
-        <div class="product-card" data-name="kerupuk udang">
-          <div class="product-img-wrapper">
-            <img src="assets/images/kerupuk_udang.png" alt="Kerupuk Udang">
-          </div>
-          <div class="product-info">
-            <h3>Kerupuk Udang</h3>
-            <p>Tekstur renyah mekar dengan paduan rasa udang olahan spesial dan rasa manis gurih alami.</p>
-            <div class="product-footer">
-              <span class="product-price"><span class="currency">Rp</span><span class="price-val">30.000</span></span>
-              <button class="btn btn-buy" onclick="addToCart('Kerupuk Udang', 30000, 'assets/images/kerupuk_udang.png')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                Tambah
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="product-card" data-name="kerupuk bawang">
-          <div class="product-img-wrapper">
-            <img src="assets/images/kerupuk_bawang.png" alt="Kerupuk Bawang">
-          </div>
-          <div class="product-info">
-            <h3>Kerupuk Bawang</h3>
-            <p>Aroma gurih khas bawang putih pilihan yang nikmat & pas sebagai teman makan nasi.</p>
-            <div class="product-footer">
-              <span class="product-price"><span class="currency">Rp</span><span class="price-val">15.000</span></span>
-              <button class="btn btn-buy" onclick="addToCart('Kerupuk Bawang', 15000, 'assets/images/kerupuk_bawang.png')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                Tambah
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 4 -->
-        <div class="product-card" data-name="kerupuk kaleng">
-          <div class="product-img-wrapper">
-            <img src="assets/images/kerupuk_kaleng.png" alt="Kerupuk Kaleng">
-          </div>
-          <div class="product-info">
-            <h3>Kerupuk Kaleng</h3>
-            <p>Kerupuk mawar legendaris dalam kemasan kaleng ikonik khas Indonesia yang selalu fresh.</p>
-            <div class="product-footer">
-              <span class="product-price"><span class="currency">Rp</span><span class="price-val">5.000</span></span>
-              <button class="btn btn-buy" onclick="addToCart('Kerupuk Kaleng', 5000, 'assets/images/kerupuk_kaleng.png')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                Tambah
-              </button>
-            </div>
-          </div>
-        </div>
-
+        <!-- Products loaded dynamically from Supabase -->
+        <div class="product-card skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+        <div class="product-card skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+        <div class="product-card skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+        <div class="product-card skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
       </div>
     </div>
   </section>
@@ -405,6 +335,8 @@
     </div>
   </aside>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="supabase-config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
